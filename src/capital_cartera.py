@@ -1,4 +1,5 @@
 import os
+import re  # Importamos el módulo de expresiones regulares
 
 class CapitalCartera:
     @staticmethod
@@ -30,23 +31,24 @@ class CapitalCartera:
         if '$' in linea:
             partes = linea.split('$')
             resultado = partes[1].strip()
-            resultado = resultado.replace("millones", "").strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
         elif ':' in linea:
             partes = linea.split(':')
             resultado = partes[1].strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
-        return None
+        else:
+            return None
+
+        # Usamos una expresión regular para extraer solo los dígitos
+        resultado = re.sub(r'\D', '', resultado)
+        return resultado
 
     @staticmethod
     def milesuvr(linea):
         partes = linea.split(':')
         if len(partes) > 1:
             resultado = partes[1].strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
+            # Usamos una expresión regular para extraer solo los dígitos
+            resultado = re.sub(r'\D', '', resultado)
+            return resultado
         return None
 
     @staticmethod
@@ -69,11 +71,14 @@ class CapitalCartera:
 
         if len(lista_final) >= 2:
             try:
-                primer_valor = int(lista_final[0])
+                valor_primero = lista_final[0]
+                primer_valor = int(valor_primero)
+
+                print(f"CAPITAL_CARTERA contenido {primer_valor} y tipo es {type(primer_valor)}")
 
                 return [primer_valor]  # Retornar una lista
             except ValueError as e:
-                print(f'Error de conversión en archivo se esperaba un numero y se recibio un caracter , se supone que capital cartera esta en ceros {nombre_archivo}: {e}')
+                print(f'CAPITAL CARTERA Error de conversión en archivo se esperaba un numero y se recibio un caracter , se supone que capital cartera esta en ceros {nombre_archivo}: {e}')
         else:
             print(f'No se encontraron suficientes datos en archivo {nombre_archivo}')
         return []

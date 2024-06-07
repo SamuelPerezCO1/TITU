@@ -14,6 +14,9 @@ class Actual:
                     texto_debajo_actual = pagina.get_text("text", clip=area_debajo_actual)
                     actual.append(texto_debajo_actual)
 
+            """
+            Mejorar como trae el actual
+            """
             lista_info = []
             for info in actual:
                 info_lines = info.strip().splitlines()

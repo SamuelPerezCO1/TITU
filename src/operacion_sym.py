@@ -1,4 +1,5 @@
 import os
+import re  # Importamos el módulo de expresiones regulares
 
 class Resultado:
     @staticmethod
@@ -30,28 +31,28 @@ class Resultado:
         if '$' in linea:
             partes = linea.split('$')
             resultado = partes[1].strip()
-            resultado = resultado.replace("millones", "").strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
         elif ':' in linea:
             partes = linea.split(':')
             resultado = partes[1].strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
-        return None
+        else:
+            return None
+        
+        # Usamos una expresión regular para extraer solo los dígitos
+        resultado = re.sub(r'\D', '', resultado)
+        return resultado
 
     @staticmethod
     def milesuvr(linea):
         partes = linea.split(':')
         if len(partes) > 1:
             resultado = partes[1].strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
+            # Usamos una expresión regular para extraer solo los dígitos
+            resultado = re.sub(r'\D', '', resultado)
+            return resultado
         return None
 
     @staticmethod
     def recorrer_archivos_txt(nombre_archivo):
-
         lineas_desde_meses_hasta_tasa = Resultado.leer_desde_meses_hasta_tasa(nombre_archivo, palabras_adicionales=5)
 
         patrones_excluir = ['a-2', 'a1-', 'a2-', 'b-', 'b1-', 'b2-', 'c-', 'c1-', 'c2-', 'mz-', 'til', 'tips', 'saldos y cobertura avalúo de brp:', 'tis', '15']
@@ -69,12 +70,22 @@ class Resultado:
 
         if len(lista_final) >= 2:
             try:
-                primer_valor = int(lista_final[0])
-                segundo_valor = int(lista_final[1])
-                operacion = primer_valor - segundo_valor
+                valor_primero = lista_final[0]
+                primer_valor = int(valor_primero)
+                segundo_valor = lista_final[1]
+                
+                # Verificar si el segundo valor es un número
+                try:
+                    segundo_valor = int(segundo_valor)
+                    operacion = primer_valor - segundo_valor
+                except ValueError:
+                    operacion = primer_valor
+
+                print(f"OPERACION_SYM contenido {operacion} y tipo es {type(operacion)}")
+
                 return [operacion]  # Retornar una lista
             except Exception as e:
-                print(f'Error de conversión en archivo en el resultado de saldo y mora se esperaba hacer una operacion entre digito y digito pero en alguno de los dos campos se recibio un caracter , se supone que alguno de los dos caracteres esta en ceros {nombre_archivo}: {e}')
+                print(f'OPERACION_SYM Error de conversión en archivo en el resultado de saldo y mora se esperaba hacer una operacion entre digito y digito pero en alguno de los dos campos se recibio un caracter , se supone que alguno de los dos caracteres esta en ceros {nombre_archivo}: {e}')
         else:
             print(f'No se encontraron suficientes datos en archivo {nombre_archivo}')
         return []
@@ -82,15 +93,9 @@ class Resultado:
     @staticmethod
     def sacar_resultado(nombre_txt, tamano, ruta_txt ):
 
-        print(f"nombre_txt = {nombre_txt}")
-        print(f"tamano = {tamano}")
-        print(f"ruta_txt = {ruta_txt}")
-
         try:
 
             nombre_txt2 = os.path.join(ruta_txt, nombre_txt)
-
-            print(f"nombre_txt2 = {nombre_txt2}")
 
             resultado_lista = Resultado.recorrer_archivos_txt(nombre_archivo=nombre_txt2)
 
@@ -105,4 +110,3 @@ class Resultado:
         
         except Exception as e:
             print(f"Error Exception en sacar_resultado en operacion_sym {e}")
-

@@ -29,6 +29,7 @@ class Especie:
 
             tips_filtrados.pop(0)
             tips_filtrados_prefijo = [f"{titulo_principal} {item}" for item in tips_filtrados]
+
             return tips_filtrados_prefijo
         except Exception as e:
             print(f"(extraer_informacion_debajo_tips) Error Exception {e}")

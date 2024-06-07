@@ -9,24 +9,20 @@ class Pdfatxt:
         try:
             with pdfplumber.open(pdf_path) as pdf:
                 for page in pdf.pages:
-                    # Extract tables from the page
-                    tables = page.extract_tables()
+                    text = page.extract_text()
+                    if text:
+                        for line in text.split('\n'):
+                            # Process each line of text
+                            if line.strip():
+                                data.append(line.strip())
 
-                    for table in tables:
-                        for row in table:
-                            # Filter empty rows or rows with empty elements
-                            if any(cell and cell.strip() for cell in row):
-                                data.append(row)
-
-            # Process and align the extracted text
             aligned_data = []
-            for row in data:
-                # Assume labels are in the first column and values in the second
-                if len(row) >= 2:
-                    label = row[0].strip().lower() if row[0] else ""
-                    value = row[1].strip() if row[1] else ""
+            for line in data:
+                label_value = line.split(':')
+                if len(label_value) >= 2:
+                    label = label_value[0].strip().lower()
+                    value = label_value[1].strip()
 
-                    # Filter rows containing "saldo" or "mora"
                     if "saldo" in label or "mora" in label:
                         aligned_data.append((label, value))
 
@@ -40,7 +36,6 @@ class Pdfatxt:
         try:
             with open(txt_path, 'w', encoding='utf-8') as file:
                 for label, value in aligned_data:
-                    # Remove underscore characters
                     label = label.replace('_', '')
                     value = value.replace('_', '')
                     file.write(f"{label}: {value}\n")
@@ -48,7 +43,7 @@ class Pdfatxt:
             print(f"Error saving text to file: {e}")
 
     @staticmethod
-    def convertir_pdf_txt(archivo_pdf , ruta_txt):
+    def convertir_pdf_txt(archivo_pdf, ruta_txt):
         aligned_text = Pdfatxt.extract_and_align_text(archivo_pdf)
 
         if not aligned_text:
@@ -57,14 +52,11 @@ class Pdfatxt:
 
         nombre_base = os.path.splitext(os.path.basename(archivo_pdf))[0]
 
-        # Path to the text file where the data will be saved
-        txt_path = f"{ruta_txt}\\{nombre_base}.txt"
+        txt_path = os.path.join(ruta_txt, f"{nombre_base}.txt")
 
         Pdfatxt.save_to_txt(aligned_text, txt_path)
 
-        # Optional: Print the aligned labels and values
         for label, value in aligned_text:
-            # Remove underscore characters also in the print
             label = label.replace('_', '')
             value = value.replace('_', '')
             # print(f"{label}: {value}")

@@ -1,4 +1,5 @@
 import os
+import re  # Importamos el módulo de expresiones regulares
 
 class Mora:
     @staticmethod
@@ -30,23 +31,24 @@ class Mora:
         if '$' in linea:
             partes = linea.split('$')
             resultado = partes[1].strip()
-            resultado = resultado.replace("millones", "").strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
         elif ':' in linea:
             partes = linea.split(':')
             resultado = partes[1].strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
-        return None
+        else:
+            return None
+
+        # Usamos una expresión regular para extraer solo los dígitos
+        resultado = re.sub(r'\D', '', resultado)
+        return resultado
 
     @staticmethod
     def milesuvr(linea):
         partes = linea.split(':')
         if len(partes) > 1:
             resultado = partes[1].strip()
-            resultado = resultado.replace(",", "").strip()
-            return resultado.replace(" ", "")  # Eliminar espacios adicionales
+            # Usamos una expresión regular para extraer solo los dígitos
+            resultado = re.sub(r'\D', '', resultado)
+            return resultado
         return None
 
     @staticmethod
@@ -70,9 +72,11 @@ class Mora:
         if len(lista_final) >= 2:
             try:
                 segundo_valor = int(lista_final[1])
+
+                print(f"MORA contenido {segundo_valor} y tipo es {type(segundo_valor)}")
                 return [segundo_valor]  # Retornar una lista
             except ValueError as e:
-                print(f'Error de conversión en archivo se esperaba recibir un digito pero se recibio un caracter , se supone que estan en ceros {nombre_archivo}: {e}')
+                print(f'MORA Error de conversión en archivo se esperaba recibir un digito pero se recibio un caracter , se supone que estan en ceros {nombre_archivo}: {e}')
         else:
             print(f'No se encontraron suficientes datos en archivo {nombre_archivo}')
         return []

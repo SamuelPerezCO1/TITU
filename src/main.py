@@ -13,6 +13,7 @@ import capital_cartera
 import mora
 import porcentajes
 import escenariosestres
+import pdfatxt
 
 fecha_actual = dt.now().strftime("%Y%m")
 
@@ -31,6 +32,7 @@ extraer_cc = capital_cartera.CapitalCartera
 extraer_mora = mora.Mora
 extraer_porcentajes = porcentajes.Porcentajes
 extraer_estres = escenariosestres.EscenariosEstres
+conversion2 = pdfatxt.Pdfatxt
 
 def eliminar_archivos_en_carpeta(carpeta):
     archivos = glob.glob(os.path.join(carpeta, '*'))
@@ -50,28 +52,25 @@ def recorrer_archivos_pdf(archivos_pdf):
                 fecha = extraer_fecha.extraer_fecha(archivo_pdf, tamano)
                 actual = extraer_actual.extraer_actual(archivo_pdf , len(tamano))
                 nombre_txt = conversion.convertir_pdf_txt(archivo_pdf, directorio_txt)
+
+                if nombre_txt is None:
+                    nombre_txt = conversion2.convertir_pdf_txt(archivo_pdf=archivo_pdf ,ruta_txt=directorio_txt )
+                
                 resultado = extraer_operacion.sacar_resultado(nombre_txt, tamano, directorio_txt)
                 saldo_cc = extraer_cc.sacar_resultado(nombre_txt , tamano , directorio_txt)
                 saldo_mora = extraer_mora.sacar_resultado(nombre_txt , tamano , directorio_txt)
                 porcentaje = extraer_porcentajes.extraer_porcentajes(archivo_pdf , len(tamano))
                 df_escenarios_estres = extraer_estres.extraer_escenariosestres(archivo_pdf)
-                # eliminar_archivos_en_carpeta(directorio_txt)
+                eliminar_archivos_en_carpeta(directorio_txt)
 
-                # print(f"Archivo que esta siendo procesado es {archivo_pdf}".center(110 , '-'))
-                # print(f"tamano = {tamano}")
-                # print(f"fecha = {fecha}")
-                # print(f"actual = {actual}")
-                # print(f"nombre_txt = {nombre_txt}")
-                # print(f"resultado = {resultado}")
-                # print(f"saldo_cc = {saldo_cc}")
-                # print(f"Saldo_mora = {saldo_mora}")
-                # print(f"Porcentaje = {porcentaje}")
-                # print(f"df_escenarios_estres = {df_escenarios_estres}")
+                tamano.append('------')
+                fecha.append('------')
+                actual.append('------')
+                resultado.append('------')
+                saldo_cc.append('------')
+                saldo_mora.append('------')
+                porcentaje.append('------')
 
-                global contador
-                contador += 1
-
-                print(f"El contador es {contador}")
                 if tamano and fecha and actual and resultado and saldo_cc and saldo_mora and porcentaje and \
                     len(tamano) == len(fecha) == len(actual) == len(resultado) == len(saldo_cc) == len(saldo_mora) == len(porcentaje):
                     df_nuevo = pd.DataFrame({
