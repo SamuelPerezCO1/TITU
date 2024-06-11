@@ -76,12 +76,13 @@ def recorrer_archivos_pdf(archivos_pdf):
                     df_nuevo = pd.DataFrame({
                         "Especie": tamano,
                         "Fecha": fecha,
-                        "Actual": actual,
+                        "Saldo_CC": saldo_cc,
+                        "Saldo_mora": saldo_mora,
+                        "Cobertura": porcentaje,
                         "Resultado": resultado,
-                        "Saldo_CC":saldo_cc,
-                        "Saldo_mora":saldo_mora,
-                        "Cobertura":porcentaje
+                        "Actual": actual
                     })
+
 
                     if not df_escenarios_estres.empty:
                         df_nuevo = pd.concat([df_nuevo , df_escenarios_estres] , axis = 1)

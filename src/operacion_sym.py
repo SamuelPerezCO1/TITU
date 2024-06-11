@@ -91,22 +91,21 @@ class Resultado:
         return []
 
     @staticmethod
-    def sacar_resultado(nombre_txt, tamano, ruta_txt ):
-
+    def sacar_resultado(nombre_txt, tamano, ruta_txt):
         try:
-
             nombre_txt2 = os.path.join(ruta_txt, nombre_txt)
-
             resultado_lista = Resultado.recorrer_archivos_txt(nombre_archivo=nombre_txt2)
-
             largo_especies = len(tamano)
-
             resultadosym = resultado_lista * largo_especies
 
+            # Formatear los resultados como números con separadores de coma para los miles
+            resultadosym = [format(resultado, ",") if resultado is not None else None for resultado in resultadosym]
+
+            # Si la longitud de resultadosym es menor que la de tamano, insertar '-' en los lugares faltantes
             while len(resultadosym) < len(tamano):
                 resultadosym.insert(0, '-')
 
             return resultadosym
-        
+
         except Exception as e:
             print(f"Error Exception en sacar_resultado en operacion_sym {e}")

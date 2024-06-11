@@ -89,9 +89,14 @@ class Mora:
             largo_especies = len(tamano)
             resultadosym = resultado_lista * largo_especies
 
+            # Formatear los números con separadores de miles
+            resultadosym = [format(resultado, ",") if resultado is not None else None for resultado in resultadosym]
+
+            # Si la longitud de resultadosym es menor que la de tamano, insertar '-' en los lugares faltantes
             while len(resultadosym) < len(tamano):
-                resultadosym.insert(0,'-')
-                
+                resultadosym.insert(0, '-')
+
             return resultadosym
         except Exception as e:
             print(f"Error exception en sacar_resultado mora {e}")
+

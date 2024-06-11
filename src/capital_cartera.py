@@ -82,11 +82,15 @@ class CapitalCartera:
         else:
             print(f'No se encontraron suficientes datos en archivo {nombre_archivo}')
         return []
-
+    
     @staticmethod
     def sacar_resultado(nombre_txt, tamano, ruta_txt):
         nombre_txt2 = os.path.join(ruta_txt, nombre_txt)
         resultado_lista = CapitalCartera.recorrer_archivos_txt(nombre_archivo=nombre_txt2)
         largo_especies = len(tamano)
         resultadosym = resultado_lista * largo_especies
+
+        # Formatear los números
+        resultadosym = [format(resultado, ",") if resultado is not None else None for resultado in resultadosym]
+
         return resultadosym
