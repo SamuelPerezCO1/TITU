@@ -14,6 +14,7 @@ import mora
 import porcentajes
 import escenariosestres
 import pdfatxt
+import cubierto
 
 fecha_actual = dt.now().strftime("%Y%m")
 
@@ -33,6 +34,7 @@ extraer_mora = mora.Mora
 extraer_porcentajes = porcentajes.Porcentajes
 extraer_estres = escenariosestres.EscenariosEstres
 conversion2 = pdfatxt.Pdfatxt
+operacion = cubierto.Cubierto
 
 def eliminar_archivos_en_carpeta(carpeta):
     archivos = glob.glob(os.path.join(carpeta, '*'))
@@ -63,6 +65,8 @@ def recorrer_archivos_pdf(archivos_pdf):
                 df_escenarios_estres = extraer_estres.extraer_escenariosestres(archivo_pdf)
                 eliminar_archivos_en_carpeta(directorio_txt)
 
+                imprimir = operacion.imprimir_resultado_saldo(resultado , actual , tamano)
+
                 tamano.append('------')
                 fecha.append('------')
                 actual.append('------')
@@ -76,11 +80,11 @@ def recorrer_archivos_pdf(archivos_pdf):
                     df_nuevo = pd.DataFrame({
                         "Especie": tamano,
                         "Fecha": fecha,
+                        "Resultado": resultado,
+                        "Actual": actual,
                         "Saldo_CC": saldo_cc,
                         "Saldo_mora": saldo_mora,
                         "Cobertura": porcentaje,
-                        "Resultado": resultado,
-                        "Actual": actual
                     })
 
 
