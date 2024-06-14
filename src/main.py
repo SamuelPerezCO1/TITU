@@ -100,7 +100,7 @@ def recorrer_archivos_pdf(archivos_pdf):
                         "Resultado":resultado,
                         "R_Numeros": resultado_numeros,
                         "Actual": lista_actual_nueva,
-                        "P_Operacion": primera_operacion
+                        "P_Operación": primera_operacion
                     })
 
 
