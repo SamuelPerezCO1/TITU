@@ -1,15 +1,23 @@
 class Cubierto:
+    @staticmethod
     def imprimir_resultado_saldo(resultado, actual, tamano):
         try:
-            valor_resultado = float(resultado[0])
-            valor_actual = float(actual[0])
-
-            lista_nueva = [valor_resultado / valor_actual]
-
+            if isinstance(resultado[0], int):
+                if actual[0] == '-':
+                    porcentaje = 100
+                elif isinstance(actual[0], int):
+                    porcentaje = (resultado[0] / actual[0]) * 100
+                else:
+                    raise ValueError("El valor de 'actual' no es válido.")
+                lista_nueva = [f"{porcentaje:.2f}%"]
+            else:
+                lista_nueva = ["-"]
+            
+            # Rellenar el resto de la lista con '-'
             while len(lista_nueva) < len(tamano):
-                lista_nueva.insert(1,None)
+                lista_nueva.append("-")
 
-            print(lista_nueva)
+            return lista_nueva
         except Exception as e:
-            print(f"error Exception en cubierto {e}")
-        
+            print(f"Error Exception en Cubierto: {e}")
+            return ["-"] * len(tamano)

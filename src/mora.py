@@ -73,7 +73,6 @@ class Mora:
             try:
                 segundo_valor = int(lista_final[1])
 
-                print(f"MORA contenido {segundo_valor} y tipo es {type(segundo_valor)}")
                 return [segundo_valor]  # Retornar una lista
             except ValueError as e:
                 print(f'MORA Error de conversión en archivo se esperaba recibir un digito pero se recibio un caracter , se supone que estan en ceros {nombre_archivo}: {e}')

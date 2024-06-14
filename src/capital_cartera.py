@@ -74,8 +74,6 @@ class CapitalCartera:
                 valor_primero = lista_final[0]
                 primer_valor = int(valor_primero)
 
-                print(f"CAPITAL_CARTERA contenido {primer_valor} y tipo es {type(primer_valor)}")
-
                 return [primer_valor]  # Retornar una lista
             except ValueError as e:
                 print(f'CAPITAL CARTERA Error de conversión en archivo se esperaba un numero y se recibio un caracter , se supone que capital cartera esta en ceros {nombre_archivo}: {e}')

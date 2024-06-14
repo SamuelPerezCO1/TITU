@@ -15,6 +15,8 @@ import porcentajes
 import escenariosestres
 import pdfatxt
 import cubierto
+import devolver_numeros_actual
+import devolver_numeros_resultado
 
 fecha_actual = dt.now().strftime("%Y%m")
 
@@ -35,6 +37,9 @@ extraer_porcentajes = porcentajes.Porcentajes
 extraer_estres = escenariosestres.EscenariosEstres
 conversion2 = pdfatxt.Pdfatxt
 operacion = cubierto.Cubierto
+devolver_lista = devolver_numeros_actual.DevolverNumeros
+devolver_lista_resultado = devolver_numeros_resultado.DevolverNumerosResultado
+
 
 def eliminar_archivos_en_carpeta(carpeta):
     archivos = glob.glob(os.path.join(carpeta, '*'))
@@ -48,43 +53,54 @@ def recorrer_archivos_pdf(archivos_pdf):
     try:
         directorio_txt = ruta_txt
         for archivo_pdf in archivos_pdf:
+            print(f"convirtiendo el archivo {archivo_pdf}")
             titulo_principal = extraer_titulo.extraer_titulo(archivo_pdf)
             if titulo_principal:
                 tamano = extraer_especie.extraer_especie(archivo_pdf, titulo_principal)
                 fecha = extraer_fecha.extraer_fecha(archivo_pdf, tamano)
                 actual = extraer_actual.extraer_actual(archivo_pdf , len(tamano))
+                lista_actual_nueva = devolver_lista.devolver_numeros(actual)
                 nombre_txt = conversion.convertir_pdf_txt(archivo_pdf, directorio_txt)
 
                 if nombre_txt is None:
                     nombre_txt = conversion2.convertir_pdf_txt(archivo_pdf=archivo_pdf ,ruta_txt=directorio_txt )
                 
                 resultado = extraer_operacion.sacar_resultado(nombre_txt, tamano, directorio_txt)
+                resultado_numeros = devolver_lista_resultado.devolver_numeros_resultado(resultado)
                 saldo_cc = extraer_cc.sacar_resultado(nombre_txt , tamano , directorio_txt)
                 saldo_mora = extraer_mora.sacar_resultado(nombre_txt , tamano , directorio_txt)
                 porcentaje = extraer_porcentajes.extraer_porcentajes(archivo_pdf , len(tamano))
                 df_escenarios_estres = extraer_estres.extraer_escenariosestres(archivo_pdf)
                 eliminar_archivos_en_carpeta(directorio_txt)
 
-                imprimir = operacion.imprimir_resultado_saldo(resultado , actual , tamano)
 
+                primera_operacion = operacion.imprimir_resultado_saldo(resultado_numeros,lista_actual_nueva , tamano)
+
+                print(f"Resultado numero es {resultado_numeros}")
                 tamano.append('------')
                 fecha.append('------')
-                actual.append('------')
+                lista_actual_nueva.append('------')
                 resultado.append('------')
                 saldo_cc.append('------')
                 saldo_mora.append('------')
                 porcentaje.append('------')
+                resultado_numeros.append('------')
+                primera_operacion.append('------')
 
-                if tamano and fecha and actual and resultado and saldo_cc and saldo_mora and porcentaje and \
-                    len(tamano) == len(fecha) == len(actual) == len(resultado) == len(saldo_cc) == len(saldo_mora) == len(porcentaje):
+                print(f"lista division nueva es {primera_operacion}")
+
+                if tamano and fecha and lista_actual_nueva and resultado and saldo_cc and saldo_mora and porcentaje  and resultado_numeros and primera_operacion and\
+                    len(tamano) == len(fecha) == len(lista_actual_nueva) == len(resultado) == len(saldo_cc) == len(saldo_mora) == len(porcentaje) == len(resultado_numeros) == len(primera_operacion):
                     df_nuevo = pd.DataFrame({
                         "Especie": tamano,
                         "Fecha": fecha,
-                        "Resultado": resultado,
-                        "Actual": actual,
                         "Saldo_CC": saldo_cc,
                         "Saldo_mora": saldo_mora,
                         "Cobertura": porcentaje,
+                        "Resultado":resultado,
+                        "R_Numeros": resultado_numeros,
+                        "Actual": lista_actual_nueva,
+                        "P_Operacion": primera_operacion
                     })
 
 

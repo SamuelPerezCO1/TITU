@@ -81,8 +81,6 @@ class Resultado:
                 except ValueError:
                     operacion = primer_valor
 
-                print(f"OPERACION_SYM contenido {operacion} y tipo es {type(operacion)}")
-
                 return [operacion]  # Retornar una lista
             except Exception as e:
                 print(f'OPERACION_SYM Error de conversión en archivo en el resultado de saldo y mora se esperaba hacer una operacion entre digito y digito pero en alguno de los dos campos se recibio un caracter , se supone que alguno de los dos caracteres esta en ceros {nombre_archivo}: {e}')
