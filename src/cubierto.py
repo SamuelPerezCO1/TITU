@@ -26,3 +26,5 @@ class Cubierto:
         except Exception as e:
             print(e)
             return []
+
+#__________________
